@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import business.User;
 import business.validation.IFieldValidator;
+import business.validation.EmptyStringValidator;
 import business.validation.LoginValidator;
 import business.validation.ValidationError;
 import peristance.IUserRepository;
@@ -61,8 +62,15 @@ public class UserService {
     }
 
     private Optional<ValidationError> validateLogin(String login) {
-        IFieldValidator validator = new LoginValidator();
-        return validator.validate(login);
+        IFieldValidator emptyStringValidator = new EmptyStringValidator();
+        IFieldValidator loginValidator = new LoginValidator(this.userRepository);
+
+        Optional<ValidationError> loginValidationError = emptyStringValidator.validate(login);
+        if (loginValidationError.isPresent()) {
+            return loginValidationError;
+        }
+
+        return loginValidator.validate(login);
     }
 
     private User buildUser(String login) {
