@@ -11,5 +11,6 @@ public interface IUserRepository {
 
     void saveUser(User userToSave);
     List<User> getUsers();
+    void clean();
 
 }

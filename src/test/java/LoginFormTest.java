@@ -1,5 +1,7 @@
 import com.codeborne.selenide.Configuration;
 import org.junit.*;
+import peristance.IUserRepository;
+import peristance.SqliteUserRepository;
 
 import static com.codeborne.selenide.Selenide.close;
 import static com.codeborne.selenide.Selenide.open;
@@ -21,6 +23,8 @@ public class LoginFormTest {
 
     @Before
     public void setUp() {
+        final IUserRepository repository = new SqliteUserRepository();
+        repository.clean();
         open(APPLICATION_URL);
     }
 
@@ -38,10 +42,24 @@ public class LoginFormTest {
     }
 
     @Test
+    @Ignore
     public void shouldNotBeAbleToAddEmptyUseName() {
         final int numberOfUsersBeforeTheTest = sut.getUsers().size();
         sut.clickSubmit();
         Assert.assertEquals("Status: Login cannot be empty", sut.getStatus());
         Assert.assertEquals(numberOfUsersBeforeTheTest, sut.getUsers().size());
     }
+
+    @Test
+    @Ignore
+    public void shouldNotBeAbleToAddDuplicatedUser() {
+        sut.setUserName("MyNewUser");
+        sut.clickSubmit();
+        final int numberOfUsersBeforeTheTest = sut.getUsers().size();
+        sut.setUserName("MyNewUser");
+        sut.clickSubmit();
+        Assert.assertEquals("Status: MyNewUser user is already present", sut.getStatus());
+        Assert.assertEquals(numberOfUsersBeforeTheTest, sut.getUsers().size());
+    }
 }
+

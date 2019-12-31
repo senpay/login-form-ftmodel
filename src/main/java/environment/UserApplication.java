@@ -29,6 +29,10 @@ public class UserApplication {
         return model;
     }
 
+    public void deleteAllUsers() {
+        service.deleteAllUsers();
+    }
+
     private Map<String, Object> getUsersList(String status) {
         final Map<String, Object> model = new HashMap<>();
         model.put("status", status);

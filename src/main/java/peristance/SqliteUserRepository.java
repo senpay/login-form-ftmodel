@@ -51,6 +51,17 @@ public class SqliteUserRepository implements IUserRepository {
         return users;
     }
 
+    @Override
+    public synchronized void clean() {
+        final String sql = "DELETE FROM users WHERE 1=1";
+
+        try (Connection conn = getConnection(); Statement stmt  = conn.createStatement()) {
+             stmt.execute(sql);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private Connection getConnection() {
         try {
             return DriverManager.getConnection(url);

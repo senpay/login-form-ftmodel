@@ -47,6 +47,10 @@ public class UserService {
         return userInfo;
     }
 
+    public void deleteAllUsers() {
+        userRepository.clean();
+    }
+
     public void setUserRepository(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -61,7 +65,7 @@ public class UserService {
 
     }
 
-    private Optional<ValidationError> validateLogin(String login) {
+    protected Optional<ValidationError> validateLogin(String login) {
         IFieldValidator emptyStringValidator = new EmptyStringValidator();
         IFieldValidator loginValidator = new LoginValidator(this.userRepository);
 
